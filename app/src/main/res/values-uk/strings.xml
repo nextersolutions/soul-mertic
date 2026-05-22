@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SoulMetric</string>
+
+    <!-- Home -->
+    <string name="home_available_surveys">Доступні опитування</string>
+    <string name="home_no_surveys_title">Опитувань ще немає</string>
+    <string name="home_no_surveys_subtitle">Потягніть для оновлення або поверніться пізніше</string>
+    <string name="home_greeting">Вітаємо</string>
+
+    <!-- Survey -->
+    <string name="survey_next">Далі</string>
+    <string name="survey_back">Назад</string>
+    <string name="survey_submit">Надіслати</string>
+    <string name="survey_optional">Необов\'язково</string>
+    <string name="survey_question_of">Питання %1$d з %2$d</string>
+
+    <!-- Results -->
+    <string name="results_title">Мої результати</string>
+    <string name="results_count_suffix">завершено</string>
+    <string name="results_empty_title">Результатів ще немає</string>
+    <string name="results_empty_subtitle">Пройдіть опитування, щоб побачити результати тут</string>
+    <string name="results_score">Бали</string>
+    <string name="results_delete_confirm">Видалити цей результат?</string>
+    <string name="results_delete_message">Цю дію неможливо скасувати.</string>
+    <string name="results_delete">Видалити</string>
+    <string name="results_cancel">Скасувати</string>
+
+    <!-- Common -->
+    <string name="error_generic">Щось пішло не так</string>
+    <string name="refresh_failed">Не вдалося оновити опитування</string>
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SoulMetric</string>
+
+    <!-- Home -->
+    <string name="home_available_surveys">Verfügbare Umfragen</string>
+    <string name="home_no_surveys_title">Noch keine Umfragen</string>
+    <string name="home_no_surveys_subtitle">Zum Aktualisieren ziehen oder später wiederkommen</string>
+    <string name="home_greeting">Willkommen</string>
+
+    <!-- Survey -->
+    <string name="survey_next">Weiter</string>
+    <string name="survey_back">Zurück</string>
+    <string name="survey_submit">Absenden</string>
+    <string name="survey_optional">Optional</string>
+    <string name="survey_question_of">Frage %1$d von %2$d</string>
+
+    <!-- Results -->
+    <string name="results_title">Meine Ergebnisse</string>
+    <string name="results_count_suffix">abgeschlossen</string>
+    <string name="results_empty_title">Noch keine Ergebnisse</string>
+    <string name="results_empty_subtitle">Schließen Sie eine Umfrage ab, um Ihre Ergebnisse hier zu sehen</string>
+    <string name="results_score">Punkte</string>
+    <string name="results_delete_confirm">Dieses Ergebnis löschen?</string>
+    <string name="results_delete_message">Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="results_delete">Löschen</string>
+    <string name="results_cancel">Abbrechen</string>
+
+    <!-- Common -->
+    <string name="error_generic">Etwas ist schief gelaufen</string>
+    <string name="refresh_failed">Umfragen konnten nicht aktualisiert werden</string>
+</resources>

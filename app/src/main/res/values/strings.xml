@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SoulMetric</string>
+
+    <!-- Home -->
+    <string name="home_available_surveys">Available Surveys</string>
+    <string name="home_no_surveys_title">No surveys yet</string>
+    <string name="home_no_surveys_subtitle">Pull to refresh or check back later</string>
+    <string name="home_greeting">Welcome</string>
+
+    <!-- Survey -->
+    <string name="survey_next">Next</string>
+    <string name="survey_back">Back</string>
+    <string name="survey_submit">Submit</string>
+    <string name="survey_optional">Optional</string>
+    <string name="survey_question_of">Question %1$d of %2$d</string>
+
+    <!-- Results -->
+    <string name="results_title">My Results</string>
+    <string name="results_count_suffix">completed</string>
+    <string name="results_empty_title">No results yet</string>
+    <string name="results_empty_subtitle">Complete a survey to see your results here</string>
+    <string name="results_score">Score</string>
+    <string name="results_delete_confirm">Delete this result?</string>
+    <string name="results_delete_message">This action cannot be undone.</string>
+    <string name="results_delete">Delete</string>
+    <string name="results_cancel">Cancel</string>
+
+    <!-- Common -->
+    <string name="error_generic">Something went wrong</string>
+    <string name="refresh_failed">Could not refresh surveys</string>
+</resources>

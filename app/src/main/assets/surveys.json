@@ -1,0 +1,165 @@
+{
+  "surveys": [
+    {
+      "id": "stress_assessment",
+      "version": 1,
+      "title": {
+        "en": "Stress Assessment",
+        "de": "Stressbewertung",
+        "ua": "Оцінка стресу"
+      },
+      "description": {
+        "en": "Understand your current stress levels and get personalized insights.",
+        "de": "Verstehen Sie Ihren aktuellen Stresspegel und erhalten Sie personalisierte Einblicke.",
+        "ua": "Зрозумійте свій поточний рівень стресу та отримайте персоналізовані висновки."
+      },
+      "questions": [
+        {
+          "id": "q_sleep",
+          "type": "scale",
+          "text": {
+            "en": "How well do you sleep?",
+            "de": "Wie gut schlafen Sie?",
+            "ua": "Як добре ви спите?"
+          },
+          "required": true,
+          "scale": {
+            "min": 1,
+            "max": 5,
+            "labels": {
+              "1": { "en": "Very bad", "de": "Sehr schlecht", "ua": "Дуже погано" },
+              "5": { "en": "Excellent", "de": "Ausgezeichnet", "ua": "Відмінно" }
+            }
+          }
+        },
+        {
+          "id": "q_stress_level",
+          "type": "scale",
+          "text": {
+            "en": "How stressed do you feel today?",
+            "de": "Wie gestresst fühlen Sie sich heute?",
+            "ua": "Наскільки напружено ви почуваєтеся сьогодні?"
+          },
+          "required": true,
+          "scale": {
+            "min": 1,
+            "max": 5,
+            "labels": {
+              "1": { "en": "Not at all", "de": "Überhaupt nicht", "ua": "Зовсім ні" },
+              "5": { "en": "Extremely", "de": "Extrem", "ua": "Надзвичайно" }
+            }
+          }
+        },
+        {
+          "id": "q_energy",
+          "type": "scale",
+          "text": {
+            "en": "How is your energy level?",
+            "de": "Wie ist Ihr Energieniveau?",
+            "ua": "Який ваш рівень енергії?"
+          },
+          "required": true,
+          "scale": {
+            "min": 1,
+            "max": 5,
+            "labels": {
+              "1": { "en": "Exhausted", "de": "Erschöpft", "ua": "Виснажений" },
+              "5": { "en": "Energized", "de": "Voller Energie", "ua": "Сповнений енергії" }
+            }
+          }
+        },
+        {
+          "id": "q_mood",
+          "type": "choice",
+          "text": {
+            "en": "How would you describe your mood?",
+            "de": "Wie würden Sie Ihre Stimmung beschreiben?",
+            "ua": "Як би ви описали свій настрій?"
+          },
+          "required": true,
+          "options": [
+            { "id": "opt_happy", "text": { "en": "Happy", "de": "Glücklich", "ua": "Щасливий" } },
+            { "id": "opt_calm", "text": { "en": "Calm", "de": "Ruhig", "ua": "Спокійний" } },
+            { "id": "opt_anxious", "text": { "en": "Anxious", "de": "Ängstlich", "ua": "Тривожний" } },
+            { "id": "opt_sad", "text": { "en": "Sad", "de": "Traurig", "ua": "Сумний" } }
+          ]
+        },
+        {
+          "id": "q_notes",
+          "type": "text",
+          "text": {
+            "en": "Any additional thoughts you'd like to share?",
+            "de": "Haben Sie weitere Gedanken, die Sie teilen möchten?",
+            "ua": "Чи є додаткові думки, якими ви хотіли б поділитися?"
+          },
+          "required": false
+        }
+      ],
+      "scoring": {
+        "method": "sum",
+        "ranges": [
+          { "min": 3, "max": 7, "description": { "en": "Low stress — you're doing great!", "de": "Geringer Stress — Sie machen das großartig!", "ua": "Низький стрес — ви чудово справляєтеся!" } },
+          { "min": 8, "max": 11, "description": { "en": "Moderate stress — consider some relaxation.", "de": "Mäßiger Stress — erwägen Sie etwas Entspannung.", "ua": "Помірний стрес — розгляньте варіанти розслаблення." } },
+          { "min": 12, "max": 15, "description": { "en": "High stress — prioritize self-care.", "de": "Hoher Stress — priorisieren Sie Selbstfürsorge.", "ua": "Високий стрес — зосередьтесь на самодопомозі." } }
+        ]
+      }
+    },
+    {
+      "id": "wellbeing_check",
+      "version": 1,
+      "title": {
+        "en": "Well-being Check",
+        "de": "Wohlbefinden-Check",
+        "ua": "Перевірка самопочуття"
+      },
+      "description": {
+        "en": "A quick check-in on your overall well-being.",
+        "de": "Eine schnelle Überprüfung Ihres allgemeinen Wohlbefindens.",
+        "ua": "Швидка перевірка вашого загального самопочуття."
+      },
+      "questions": [
+        {
+          "id": "q_satisfaction",
+          "type": "scale",
+          "text": {
+            "en": "How satisfied are you with life right now?",
+            "de": "Wie zufrieden sind Sie derzeit mit dem Leben?",
+            "ua": "Наскільки ви задоволені своїм життям зараз?"
+          },
+          "required": true,
+          "scale": {
+            "min": 1,
+            "max": 5,
+            "labels": {
+              "1": { "en": "Very unsatisfied", "de": "Sehr unzufrieden", "ua": "Дуже незадоволений" },
+              "5": { "en": "Very satisfied", "de": "Sehr zufrieden", "ua": "Дуже задоволений" }
+            }
+          }
+        },
+        {
+          "id": "q_social",
+          "type": "choice",
+          "text": {
+            "en": "How often do you connect with friends or family?",
+            "de": "Wie oft stehen Sie mit Freunden oder Familie in Kontakt?",
+            "ua": "Як часто ви спілкуєтеся з друзями або родиною?"
+          },
+          "required": true,
+          "options": [
+            { "id": "opt_daily", "text": { "en": "Daily", "de": "Täglich", "ua": "Щодня" } },
+            { "id": "opt_weekly", "text": { "en": "Weekly", "de": "Wöchentlich", "ua": "Щотижня" } },
+            { "id": "opt_monthly", "text": { "en": "Monthly", "de": "Monatlich", "ua": "Щомісяця" } },
+            { "id": "opt_rarely", "text": { "en": "Rarely", "de": "Selten", "ua": "Рідко" } }
+          ]
+        }
+      ],
+      "scoring": {
+        "method": "sum",
+        "ranges": [
+          { "min": 1, "max": 3, "description": { "en": "Needs attention", "de": "Braucht Aufmerksamkeit", "ua": "Потребує уваги" } },
+          { "min": 4, "max": 6, "description": { "en": "Doing well", "de": "Läuft gut", "ua": "Все добре" } }
+        ]
+      }
+    }
+  ]
+}
