@@ -48,7 +48,9 @@ object NetworkModule {
         install(Logging) {
             level = if (BuildConfig.DEBUG) LogLevel.BODY else LogLevel.NONE
             logger = object : Logger {
-                override fun log(message: String) = android.util.Log.d("Ktor", message)
+                override fun log(message: String) {
+                    android.util.Log.d("Ktor", message)
+                }
             }
         }
         defaultRequest { url(BuildConfig.SURVEYS_BASE_URL) }
@@ -68,21 +70,23 @@ object DatabaseModule {
     fun provideDatabase(@ApplicationContext context: Context): SoulMetricDatabase =
         Room.databaseBuilder(context, SoulMetricDatabase::class.java, "soulmetric.db").build()
 
-    @Provides fun provideSurveyCacheDao(db: SoulMetricDatabase): SurveyCacheDao = db.surveyCacheDao()
-    @Provides fun provideSurveyResultDao(db: SoulMetricDatabase): SurveyResultDao = db.surveyResultDao()
-    @Provides fun provideSurveyAnswerDao(db: SoulMetricDatabase): SurveyAnswerDao = db.surveyAnswerDao()
+    @Provides
+    fun provideSurveyCacheDao(db: SoulMetricDatabase): SurveyCacheDao = db.surveyCacheDao()
+    @Provides
+    fun provideSurveyResultDao(db: SoulMetricDatabase): SurveyResultDao = db.surveyResultDao()
+    @Provides
+    fun provideSurveyAnswerDao(db: SoulMetricDatabase): SurveyAnswerDao = db.surveyAnswerDao()
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
-    @Binds @Singleton
+    @Binds
+    @Singleton
     abstract fun bindSurveyRepository(impl: SurveyRepositoryImpl): SurveyRepository
 
-    @Binds @Singleton
+    @Binds
+    @Singleton
     abstract fun bindSurveyResultRepository(impl: SurveyResultRepositoryImpl): SurveyResultRepository
 }
-
-// AppPreferences is @Singleton and @Inject-constructor, so Hilt picks it up automatically.
-// No extra module needed.

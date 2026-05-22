@@ -1,6 +1,8 @@
 package com.nextersolutions.soulmetric.navigation
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -15,16 +17,23 @@ sealed class Screen(val route: String) {
     data object Survey : Screen("survey/{surveyId}") {
         fun createRoute(surveyId: String) = "survey/$surveyId"
     }
+
     data object Results : Screen("results")
 }
 
 @Composable
 fun SoulMetricNavHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.Home.route) {
+    NavHost(
+        modifier = Modifier.fillMaxSize(),
+        navController = navController,
+        startDestination = Screen.Home.route
+    ) {
 
         composable(Screen.Home.route) {
             HomeScreen(
-                onNavigateToSurvey = { id -> navController.navigate(Screen.Survey.createRoute(id)) },
+                onNavigateToSurvey = { id ->
+                    navController.navigate(Screen.Survey.createRoute(id))
+                },
                 onNavigateToResults = { navController.navigate(Screen.Results.route) }
             )
         }

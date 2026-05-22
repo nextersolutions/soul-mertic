@@ -58,9 +58,7 @@ fun HomeScreen(
         containerColor = Background
     ) { padding ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
+            modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 32.dp)
         ) {
             item {
@@ -83,7 +81,13 @@ fun HomeScreen(
             }
 
             if (state.isLoading) {
-                item { LoadingIndicator(Modifier.fillMaxWidth().height(200.dp)) }
+                item {
+                    LoadingIndicator(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                    )
+                }
             } else if (state.surveys.isEmpty()) {
                 item {
                     EmptyState(
@@ -134,13 +138,27 @@ private fun HomeHeader(
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     HeaderIconButton(onClick = onRefresh) {
                         if (isRefreshing) {
-                            CircularProgressIndicator(color = Color.White, modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
+                            CircularProgressIndicator(
+                                color = Color.White,
+                                modifier = Modifier.size(18.dp),
+                                strokeWidth = 2.dp
+                            )
                         } else {
-                            Icon(Icons.Default.Refresh, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(
+                                Icons.Default.Refresh,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp)
+                            )
                         }
                     }
                     HeaderIconButton(onClick = onResults) {
-                        Icon(Icons.Default.BarChart, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
+                        Icon(
+                            Icons.Default.BarChart,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(20.dp)
+                        )
                     }
                 }
             }

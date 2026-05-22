@@ -39,7 +39,7 @@ fun ResultsScreen(
     val dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy · HH:mm")
 
     Scaffold(containerColor = Background) { padding ->
-        Column(modifier = Modifier.fillMaxSize().padding(padding)) {
+        Column(modifier = Modifier.fillMaxSize()) {
             // Header
             Box(
                 modifier = Modifier
@@ -51,7 +51,11 @@ fun ResultsScreen(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Color.White)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
                     }
                     Spacer(Modifier.width(8.dp))
                     Column {
@@ -76,7 +80,9 @@ fun ResultsScreen(
                     icon = "📭",
                     title = stringResource(R.string.results_empty_title),
                     subtitle = stringResource(R.string.results_empty_subtitle),
-                    modifier = Modifier.fillMaxSize().padding(32.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp)
                 )
             } else {
                 LazyColumn(
@@ -115,7 +121,11 @@ private fun ResultCard(
                     Text("Delete", color = MaterialTheme.colorScheme.error)
                 }
             },
-            dismissButton = { TextButton(onClick = { showDeleteDialog = false }) { Text("Cancel") } }
+            dismissButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                }) { Text("Cancel") }
+            }
         )
     }
 
@@ -176,7 +186,11 @@ private fun ResultCard(
                         }
                     }
                 } else if (result.scoreDescription != null) {
-                    Text(result.scoreDescription, style = MaterialTheme.typography.bodyMedium, color = OnSurface)
+                    Text(
+                        result.scoreDescription,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = OnSurface
+                    )
                 }
             }
         }
