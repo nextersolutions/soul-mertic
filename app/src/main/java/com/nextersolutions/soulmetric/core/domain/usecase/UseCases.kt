@@ -51,13 +51,26 @@ class SubmitSurveyUseCase @Inject constructor(
     }
 
     private fun calculateScore(survey: Survey, answers: Map<String, Answer>): Int? {
-        if (survey.scoring?.method != "sum") return null
-        return answers.values.sumOf { answer ->
-            when (answer) {
-                is Answer.ScaleAnswer -> answer.value
-                else -> 0
+        val scoring = survey.scoring ?: return null
+        if (scoring.method != "sum") return null
+
+        // Build a lookup: questionId → numeric option values, for choice questions
+        val choiceValueMap: Map<String, Map<String, Int>> = survey.questions
+            .filterIsInstance<com.nextersolutions.soulmetric.core.domain.model.Question.Choice>()
+            .associate { q -> q.id to q.options.associate { it.id to it.value } }
+
+        val targetIds = scoring.scoredQuestions.toSet()
+
+        return answers.values
+            .filter { targetIds.isEmpty() || it.questionId in targetIds }
+            .sumOf { answer ->
+                when (answer) {
+                    is Answer.ScaleAnswer -> answer.value
+                    is Answer.ChoiceAnswer ->
+                        choiceValueMap[answer.questionId]?.get(answer.selectedOptionId) ?: 0
+                    is Answer.TextAnswer -> 0
+                }
             }
-        }
     }
 }
 
