@@ -15,7 +15,14 @@ data class SurveyDto(
     val title: Map<String, String>,
     val description: Map<String, String> = emptyMap(),
     val questions: List<QuestionDto>,
+    val sections: List<SectionDto> = emptyList(),
     val scoring: ScoringDto? = null
+)
+
+@Serializable
+data class SectionDto(
+    val id: String,
+    val title: Map<String, String>
 )
 
 @Serializable
@@ -24,6 +31,7 @@ data class QuestionDto(
     val type: String,
     val text: Map<String, String>,
     val required: Boolean = true,
+    val section: String? = null,
     val scale: ScaleDto? = null,
     val options: List<OptionDto>? = null
 )
@@ -38,12 +46,14 @@ data class ScaleDto(
 @Serializable
 data class OptionDto(
     val id: String,
-    val text: Map<String, String>
+    val text: Map<String, String>,
+    val value: Int = 0
 )
 
 @Serializable
 data class ScoringDto(
     val method: String,
+    @SerialName("scored_questions") val scoredQuestions: List<String> = emptyList(),
     val ranges: List<ScoreRangeDto>
 )
 
@@ -51,5 +61,6 @@ data class ScoringDto(
 data class ScoreRangeDto(
     val min: Int,
     val max: Int,
+    val label: Map<String, String> = emptyMap(),
     val description: Map<String, String>
 )

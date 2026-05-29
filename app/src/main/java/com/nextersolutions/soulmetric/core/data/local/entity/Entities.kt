@@ -5,6 +5,9 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+/** Lightweight projection used for version-comparison queries — avoids loading the full JSON blob. */
+data class SurveyCacheVersionRow(val id: String, val version: Int)
+
 @Entity(tableName = "survey_cache")
 data class SurveyCacheEntity(
     @PrimaryKey val id: String,

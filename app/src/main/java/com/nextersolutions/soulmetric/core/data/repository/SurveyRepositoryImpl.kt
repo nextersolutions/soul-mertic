@@ -28,7 +28,7 @@ class SurveyRepositoryImpl @Inject constructor(
     override fun getSurveys(): Flow<List<Survey>> {
         val locale = LocaleResolver.resolve(context)
         return dao.observeAll()
-            .onStart { seedFromAssetsIfEmpty() }
+            .onStart { syncNewSurveysFromAssets() }
             .map { entities ->
                 entities.map { entity ->
                     json.decodeFromString<SurveyDto>(entity.json).toDomain(locale)
@@ -38,7 +38,7 @@ class SurveyRepositoryImpl @Inject constructor(
 
     override suspend fun getSurveyById(id: String): Survey? {
         val locale = LocaleResolver.resolve(context)
-        seedFromAssetsIfEmpty()
+        syncNewSurveysFromAssets()
         return dao.getById(id)?.let { entity ->
             json.decodeFromString<SurveyDto>(entity.json).toDomain(locale)
         }
@@ -51,15 +51,34 @@ class SurveyRepositoryImpl @Inject constructor(
 
     // ---- helpers ----
 
-    private suspend fun seedFromAssetsIfEmpty() {
-        if (dao.count() == 0) {
-            // table is empty – seed from bundled assets
-            val text = context.assets.open("surveys.json").bufferedReader().readText()
-            val response = json.decodeFromString<SurveysResponseDto>(text)
-            persistDtos(response.surveys)
+    /**
+     * Called on every startup. Ensures the cache is in sync with the bundled assets:
+     * - Surveys not yet in the DB are inserted.
+     * - Surveys whose assets version is higher than the cached version are upserted
+     *   (this covers the case where surveys.json is updated between app installs).
+     * - Surveys where the cached version is already equal or higher (e.g. from a network
+     *   refresh) are left untouched.
+     */
+    private suspend fun syncNewSurveysFromAssets() {
+        val text = context.assets.open("surveys.json").bufferedReader().readText()
+        val response = json.decodeFromString<SurveysResponseDto>(text)
+
+        val cachedVersions: Map<String, Int> =
+            dao.getAllVersions().associate { it.id to it.version }
+
+        // Include a survey if it is new (not in DB) or if the assets version is higher
+        // than what's cached (covers surveys.json updates between installs).
+        val staleOrMissing = response.surveys.filter { dto ->
+            val cached = cachedVersions[dto.id]
+            cached == null || dto.version > cached
+        }
+
+        if (staleOrMissing.isNotEmpty()) {
+            persistDtos(staleOrMissing)
         }
     }
 
+    /** Used by network refresh — replaces cached surveys with the latest server versions. */
     private suspend fun persistDtos(dtos: List<SurveyDto>) {
         val entities = dtos.map { dto ->
             SurveyCacheEntity(

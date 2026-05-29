@@ -3,6 +3,7 @@ package com.nextersolutions.soulmetric.core.data.local.dao
 import androidx.room.*
 import com.nextersolutions.soulmetric.core.data.local.entity.SurveyAnswerEntity
 import com.nextersolutions.soulmetric.core.data.local.entity.SurveyCacheEntity
+import com.nextersolutions.soulmetric.core.data.local.entity.SurveyCacheVersionRow
 import com.nextersolutions.soulmetric.core.data.local.entity.SurveyResultEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -17,8 +18,16 @@ interface SurveyCacheDao {
     @Query("SELECT COUNT(*) FROM survey_cache")
     suspend fun count(): Int
 
+    /** Returns a map of surveyId → cached version for all rows. */
+    @Query("SELECT id, version FROM survey_cache")
+    suspend fun getAllVersions(): List<SurveyCacheVersionRow>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(surveys: List<SurveyCacheEntity>)
+
+    /** Inserts surveys that are not yet in the cache; ignores rows that already exist. */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertIfAbsent(surveys: List<SurveyCacheEntity>)
 
     @Query("DELETE FROM survey_cache")
     suspend fun clearAll()
