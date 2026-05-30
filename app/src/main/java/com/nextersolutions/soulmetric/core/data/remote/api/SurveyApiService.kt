@@ -7,5 +7,5 @@ import io.ktor.client.request.get
 
 class SurveyApiService(private val client: HttpClient) {
     suspend fun fetchSurveys(): SurveysResponseDto =
-        client.get("surveys/surveys.json").body()
+        client.get("surveys.json").body()
 }

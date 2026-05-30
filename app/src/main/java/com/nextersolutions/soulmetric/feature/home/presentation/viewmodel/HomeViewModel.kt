@@ -2,6 +2,9 @@ package com.nextersolutions.soulmetric.feature.home.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import com.nextersolutions.soulmetric.core.data.worker.SurveySyncWorker
 import com.nextersolutions.soulmetric.core.domain.usecase.GetSurveysUseCase
 import com.nextersolutions.soulmetric.core.domain.usecase.RefreshSurveysUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getSurveysUseCase: GetSurveysUseCase,
-    private val refreshSurveysUseCase: RefreshSurveysUseCase
+    private val refreshSurveysUseCase: RefreshSurveysUseCase,
+    private val workManager: WorkManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
@@ -24,6 +28,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         onIntent(HomeIntent.LoadSurveys)
+        observeSyncWorker()
     }
 
     fun onIntent(intent: HomeIntent) {
@@ -58,6 +63,21 @@ class HomeViewModel @Inject constructor(
                 .onFailure { e ->
                     _state.update { it.copy(isRefreshing = false) }
                     _effect.send(HomeEffect.ShowSnackbar(e.message ?: "Refresh failed"))
+                }
+        }
+    }
+
+    /** Mirrors the WorkManager job state into [HomeState.isSyncing]. */
+    private fun observeSyncWorker() {
+        viewModelScope.launch {
+            workManager
+                .getWorkInfosForUniqueWorkFlow(SurveySyncWorker.WORK_NAME)
+                .collect { infos ->
+                    val running = infos.any { info ->
+                        info.state == WorkInfo.State.RUNNING ||
+                        info.state == WorkInfo.State.ENQUEUED
+                    }
+                    _state.update { it.copy(isSyncing = running) }
                 }
         }
     }

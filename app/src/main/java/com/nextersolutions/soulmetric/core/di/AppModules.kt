@@ -2,6 +2,7 @@ package com.nextersolutions.soulmetric.core.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.nextersolutions.soulmetric.BuildConfig
 import com.nextersolutions.soulmetric.core.data.local.dao.SurveyAnswerDao
 import com.nextersolutions.soulmetric.core.data.local.dao.SurveyCacheDao
@@ -89,4 +90,13 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindSurveyResultRepository(impl: SurveyResultRepositoryImpl): SurveyResultRepository
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object WorkModule {
+    @Provides
+    @Singleton
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager =
+        WorkManager.getInstance(context)
 }

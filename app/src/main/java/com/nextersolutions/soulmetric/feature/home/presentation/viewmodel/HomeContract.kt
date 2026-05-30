@@ -6,6 +6,7 @@ data class HomeState(
     val surveys: List<Survey> = emptyList(),
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
+    val isSyncing: Boolean = false,
     val error: String? = null
 )
 

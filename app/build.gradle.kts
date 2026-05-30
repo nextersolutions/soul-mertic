@@ -21,7 +21,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
 
-        buildConfigField("String", "SURVEYS_BASE_URL", "\"https://api.nextersolutions.com/\"")
+        buildConfigField("String", "SURVEYS_BASE_URL", "\"https://nextersolutions.com/products/soulmetric/\"")
     }
 
     buildTypes {
@@ -78,5 +78,8 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.splash.screen)
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.work.runtime.ktx)
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.work.compiler)
     debugImplementation(libs.androidx.ui.tooling)
 }

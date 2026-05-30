@@ -12,6 +12,9 @@ interface SurveyCacheDao {
     @Query("SELECT * FROM survey_cache")
     fun observeAll(): Flow<List<SurveyCacheEntity>>
 
+    @Query("SELECT * FROM survey_cache")
+    suspend fun getAll(): List<SurveyCacheEntity>
+
     @Query("SELECT * FROM survey_cache WHERE id = :id")
     suspend fun getById(id: String): SurveyCacheEntity?
 
