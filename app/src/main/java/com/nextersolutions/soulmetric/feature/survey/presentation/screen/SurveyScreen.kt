@@ -1,19 +1,61 @@
 package com.nextersolutions.soulmetric.feature.survey.presentation.screen
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -31,13 +73,24 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nextersolutions.soulmetric.R
 import com.nextersolutions.soulmetric.core.domain.model.Answer
 import com.nextersolutions.soulmetric.core.domain.model.Question
-import com.nextersolutions.soulmetric.feature.survey.presentation.viewmodel.*
+import com.nextersolutions.soulmetric.feature.survey.presentation.viewmodel.SurveyEffect
+import com.nextersolutions.soulmetric.feature.survey.presentation.viewmodel.SurveyIntent
+import com.nextersolutions.soulmetric.feature.survey.presentation.viewmodel.SurveyState
+import com.nextersolutions.soulmetric.feature.survey.presentation.viewmodel.SurveyStep
+import com.nextersolutions.soulmetric.feature.survey.presentation.viewmodel.SurveyViewModel
 import com.nextersolutions.soulmetric.ui.components.GradientButton
 import com.nextersolutions.soulmetric.ui.components.LoadingIndicator
-import com.nextersolutions.soulmetric.ui.theme.*
+import com.nextersolutions.soulmetric.ui.theme.Background
+import com.nextersolutions.soulmetric.ui.theme.BlueViolet
+import com.nextersolutions.soulmetric.ui.theme.Divider
+import com.nextersolutions.soulmetric.ui.theme.OnSurface
+import com.nextersolutions.soulmetric.ui.theme.OnSurface40
+import com.nextersolutions.soulmetric.ui.theme.OnSurface60
+import com.nextersolutions.soulmetric.ui.theme.Purple100
+import com.nextersolutions.soulmetric.ui.theme.Purple600
+import com.nextersolutions.soulmetric.ui.theme.Purple700
+import com.nextersolutions.soulmetric.ui.theme.Surface
 import kotlinx.coroutines.flow.collectLatest
-
-// ─── Root screen ─────────────────────────────────────────────────────────────
 
 @Composable
 fun SurveyScreen(
@@ -63,22 +116,22 @@ fun SurveyScreen(
         }
     }
 
-    Scaffold(snackbarHost = { SnackbarHost(snackbarHost) }, containerColor = Background) { padding ->
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHost) },
+        containerColor = Background
+    ) { padding ->
         if (state.isLoading) {
             LoadingIndicator(Modifier.fillMaxSize())
             return@Scaffold
         }
         if (state.survey == null) return@Scaffold
 
-        // Cross-fade between section splash and question content
         AnimatedContent(
             targetState = state.currentStep,
             transitionSpec = {
                 fadeIn(tween(400)).togetherWith(fadeOut(tween(250)))
             },
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
+            modifier = Modifier.fillMaxSize(),
             label = "step_transition"
         ) { step ->
             when (step) {
@@ -90,19 +143,19 @@ fun SurveyScreen(
                     },
                     onContinue = { viewModel.onIntent(SurveyIntent.NextQuestion) }
                 )
+
                 is SurveyStep.QuestionStep -> QuestionScreen(
                     state = state,
                     onBack = { viewModel.onIntent(SurveyIntent.PreviousQuestion) },
                     onNavigateBack = onNavigateBack,
                     onIntent = { viewModel.onIntent(it) }
                 )
+
                 null -> Unit
             }
         }
     }
 }
-
-// ─── Section splash ───────────────────────────────────────────────────────────
 
 @Composable
 private fun SectionSplashScreen(
@@ -130,7 +183,10 @@ private fun SectionSplashScreen(
     )
     val titleScale by animateFloatAsState(
         targetValue = if (entered) 1f else 0.82f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMediumLow),
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMediumLow
+        ),
         label = "title_scale"
     )
     val lineProgress by animateFloatAsState(
@@ -246,7 +302,11 @@ private fun QuestionScreen(
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = { if (state.canGoBack) onBack() else onNavigateBack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Color.White)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
                     }
                     Spacer(Modifier.width(8.dp))
                     Text(
@@ -294,7 +354,15 @@ private fun QuestionScreen(
                     question = question,
                     currentAnswer = state.answers[question.id],
                     onAnswerScale = { id, v -> onIntent(SurveyIntent.AnswerScale(id, v)) },
-                    onAnswerChoice = { id, optId, optText -> onIntent(SurveyIntent.AnswerChoice(id, optId, optText)) },
+                    onAnswerChoice = { id, optId, optText ->
+                        onIntent(
+                            SurveyIntent.AnswerChoice(
+                                id,
+                                optId,
+                                optText
+                            )
+                        )
+                    },
                     onAnswerText = { id, t -> onIntent(SurveyIntent.AnswerText(id, t)) }
                 )
             }
@@ -320,7 +388,7 @@ private fun QuestionScreen(
             }
             GradientButton(
                 text = if (state.isLastStep) stringResource(R.string.survey_submit)
-                       else stringResource(R.string.survey_next),
+                else stringResource(R.string.survey_next),
                 onClick = { onIntent(SurveyIntent.NextQuestion) },
                 enabled = state.canGoNext && !state.isSubmitting,
                 modifier = Modifier.weight(1f)
@@ -345,7 +413,11 @@ private fun QuestionContent(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp, vertical = 24.dp)
     ) {
-        Text(text = question.text, style = MaterialTheme.typography.displayMedium, color = OnSurface)
+        Text(
+            text = question.text,
+            style = MaterialTheme.typography.displayMedium,
+            color = OnSurface
+        )
         if (!question.required) {
             Spacer(Modifier.height(4.dp))
             Text("Optional", style = MaterialTheme.typography.labelMedium, color = OnSurface60)
@@ -358,11 +430,13 @@ private fun QuestionContent(
                 selectedValue = (currentAnswer as? Answer.ScaleAnswer)?.value,
                 onSelect = { onAnswerScale(question.id, it) }
             )
+
             is Question.Choice -> ChoiceQuestion(
                 question = question,
                 selectedOptionId = (currentAnswer as? Answer.ChoiceAnswer)?.selectedOptionId,
                 onSelect = { optId, optText -> onAnswerChoice(question.id, optId, optText) }
             )
+
             is Question.TextInput -> TextQuestion(
                 currentValue = (currentAnswer as? Answer.TextAnswer)?.value ?: "",
                 onValueChange = { onAnswerText(question.id, it) }
@@ -387,7 +461,11 @@ private fun ScaleQuestion(question: Question.Scale, selectedValue: Int?, onSelec
                             if (isSelected) Brush.linearGradient(listOf(Purple700, BlueViolet))
                             else Brush.linearGradient(listOf(Surface, Surface))
                         )
-                        .border(if (isSelected) 0.dp else 1.5.dp, Divider, RoundedCornerShape(16.dp))
+                        .border(
+                            if (isSelected) 0.dp else 1.5.dp,
+                            Divider,
+                            RoundedCornerShape(16.dp)
+                        )
                         .clickable { onSelect(i) },
                     contentAlignment = Alignment.Center
                 ) {
@@ -408,7 +486,11 @@ private fun ScaleQuestion(question: Question.Scale, selectedValue: Int?, onSelec
 }
 
 @Composable
-private fun ChoiceQuestion(question: Question.Choice, selectedOptionId: String?, onSelect: (String, String) -> Unit) {
+private fun ChoiceQuestion(
+    question: Question.Choice,
+    selectedOptionId: String?,
+    onSelect: (String, String) -> Unit
+) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         question.options.forEach { option ->
             val isSelected = selectedOptionId == option.id
